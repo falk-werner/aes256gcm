@@ -2,6 +2,7 @@
 #include "aes256gcm/constants.hpp"
 
 #include <cstring>
+#include <cstdint>
 #include <stdexcept>
 #include <vector>
 
