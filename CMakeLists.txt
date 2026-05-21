@@ -11,6 +11,7 @@ add_library(aes256gcm STATIC
     lib/aes256gcm/openssl_error.cpp
     lib/aes256gcm/encrypter.cpp
     lib/aes256gcm/decrypter.cpp
+    lib/aes256gcm/verifier.cpp
     
     lib/aes256gcm/proprietary/encryption_info.cpp
     lib/aes256gcm/proprietary/encrypt_file.cpp
