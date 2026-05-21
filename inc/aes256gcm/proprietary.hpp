@@ -49,7 +49,7 @@ bool get_encryption_info(
 void encrypt_file(
     std::string const & input_filename,
     std::string const & output_filename,
-    std::string const & password,
+    std::string & password,
     std::string const & additional_data = "");
 
 
@@ -65,7 +65,7 @@ void encrypt_file(
 ///                        authenticated in the encrypted file
 void encrypt_file_inplace(
     std::string const & filename,
-    std::string const & password,
+    std::string & password,
     std::string const & additional_data = "");
 
 
@@ -84,7 +84,7 @@ void encrypt_file_inplace(
 int decrypt_file(
     std::string const & input_filename,
     std::string const & output_filename,
-    std::string const & password);
+    std::string & password);
 
 
 /// @brief Decrypt a given file inplace.
@@ -100,7 +100,7 @@ int decrypt_file(
 /// @return 0 on success, otherwise failure.
 int decrypt_file_inplace(
     std::string const & filename,
-    std::string const & password);    
+    std::string & password);    
 
 }
 

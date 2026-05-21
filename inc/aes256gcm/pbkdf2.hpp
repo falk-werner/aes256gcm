@@ -19,7 +19,7 @@ namespace aes256gcm
 /// @return derived key
 /// @throws An openssl_error is thrown on error of underlying OpenSSL function calls.
 std::string pbkdf2(
-    std::string const & password,
+    std::string & password,
     std::string const & salt,
     std::string const & digest,
     unsigned int iterations);

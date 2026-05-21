@@ -13,7 +13,7 @@ namespace aes256gcm
 {
 
 std::string pbkdf2(
-    std::string const & password,
+    std::string & password,
     std::string const & salt,
     std::string const & digest,
     unsigned int iterations)
@@ -48,6 +48,7 @@ std::string pbkdf2(
         throw openssl_error();
     }
 
+    for(char & c: password) { c = '\0'; }
     return std::string(key, key_size);
 }
 

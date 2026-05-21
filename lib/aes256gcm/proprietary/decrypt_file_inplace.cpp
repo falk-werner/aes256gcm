@@ -15,7 +15,7 @@ namespace aes256gcm::proprietary
 
 int decrypt_file_inplace(
     std::string const & filename,
-    std::string const & password)
+    std::string & password)
 {
     encryption_info info;
     if (!get_encryption_info(filename, info))

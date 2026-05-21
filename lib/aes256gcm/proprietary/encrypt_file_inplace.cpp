@@ -13,7 +13,7 @@ namespace aes256gcm::proprietary
 
 void encrypt_file_inplace(
     std::string const & filename,
-    std::string const & password,
+    std::string & password,
     std::string const & additional_data)
 {
     std::string salt;

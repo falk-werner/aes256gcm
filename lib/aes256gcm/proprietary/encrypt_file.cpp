@@ -13,7 +13,7 @@ namespace aes256gcm::proprietary
 void encrypt_file(
     std::string const & input_filename,
     std::string const & output_filename,
-    std::string const & password,
+    std::string & password,
     std::string const & additional_data)
 {
     try

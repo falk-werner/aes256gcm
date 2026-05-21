@@ -13,7 +13,11 @@ namespace aes256gcm::proprietary
 memmapped_file::memmapped_file(std::string const & filename)
 {
     auto const file_size = std::filesystem::file_size(filename);
-    if (file_size > SIZE_MAX)
+    if (file_size == 0)
+    {
+        throw std::runtime_error("file empty");
+    }
+    else if (file_size > SIZE_MAX)
     {
         throw std::runtime_error("file too large");
     }
