@@ -5,7 +5,7 @@ namespace
 {
 
 std::string generate_key(
-    std::string const & password,
+    std::string & password,
     std::string & salt)
 {
     std::string digest;
@@ -19,8 +19,9 @@ std::string generate_key(
 
 TEST(aes256gcm, encrypt_and_decrypt)
 {
+    std::string password = "secret";
     std::string salt;
-    auto const key = generate_key("secret", salt);
+    auto const key = generate_key(password, salt);
 
     aes256gcm::encrypter encrypter(key);
     std::vector<char> const plaintext = {1, 2, 3, 4};
@@ -46,8 +47,9 @@ TEST(aes256gcm, encrypt_and_decrypt)
 
 TEST(aes256gcm, encrypt_and_decrypt_inplace)
 {
+    std::string password = "secret";
     std::string salt;
-    auto const key = generate_key("secret", salt);
+    auto const key = generate_key(password, salt);
 
     aes256gcm::encrypter encrypter(key);
     char buffer[] = {1, 2, 3, 4};
@@ -75,8 +77,9 @@ TEST(aes256gcm, encrypt_and_decrypt_inplace)
 
 TEST(aes256gcm, decrypt_fails_with_invalid_tag)
 {
+    std::string password = "secret";
     std::string salt;
-    auto const key = generate_key("secret", salt);
+    auto const key = generate_key(password, salt);
 
     aes256gcm::encrypter encrypter(key);
     std::vector<char> const plaintext = {1, 2, 3, 4};
@@ -108,8 +111,9 @@ TEST(aes256gcm, decrypt_fails_with_invalid_tag)
 
 TEST(aes256gcm, decrypt_fails_with_invalid_key)
 {
+    std::string password = "secret";
     std::string salt;
-    auto key = generate_key("secret", salt);
+    auto key = generate_key(password, salt);
 
     aes256gcm::encrypter encrypter(key);
     std::vector<char> const plaintext = {1, 2, 3, 4};
@@ -133,8 +137,9 @@ TEST(aes256gcm, decrypt_fails_with_invalid_key)
 
 TEST(aes256gcm, decrypt_fails_with_invalid_nonce)
 {
+    std::string password = "secret";
     std::string salt;
-    auto const key = generate_key("secret", salt);
+    auto const key = generate_key(password, salt);
 
     aes256gcm::encrypter encrypter(key);
     std::vector<char> const plaintext = {1, 2, 3, 4};

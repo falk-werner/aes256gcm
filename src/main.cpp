@@ -124,7 +124,7 @@ struct context
 void encrypt(
     std::string const & input_file,
     std::string const & output_file,
-    std::string const & key)
+    std::string & key)
 {
     if (output_file.empty())
     {
@@ -139,7 +139,7 @@ void encrypt(
 int decrypt(
     std::string const & input_file,
     std::string const & output_file,
-    std::string const & key)
+    std::string & key)
 {
     if (output_file.empty())
     {
