@@ -1,6 +1,8 @@
 #include "aes256gcm/proprietary.hpp"
 #include "aes256gcm/proprietary/encryption_info.hpp"
+#include "aes256gcm/proprietary/memmapped_file.hpp"
 #include "aes256gcm/decrypter.hpp"
+#include "aes256gcm/verifier.hpp"
 #include "aes256gcm/pbkdf2.hpp"
 
 #include <fstream>
@@ -27,34 +29,35 @@ int decrypt_file(
     auto const key = pbkdf2(password, info.kdf.salt, info.kdf.digest, info.kdf.iterations);
     decrypter dec(key, info.nonce, info.tag, info.additional_data);
 
-    auto const file_size = std::filesystem::file_size(input_filename);
-    auto remaining = file_size - info.size;
-
     {
-        std::ifstream in(input_filename);
-        std::ofstream out(output_filename);
+        verifier v(key, info.nonce, info.tag, info.additional_data);
+        memmapped_file file(input_filename);
+        auto remaining = file.size() - info.size;
 
-        constexpr size_t const buffer_size = 100 * 1024;
-        std::vector<char> in_buffer(buffer_size);
-        std::vector<char> out_buffer(buffer_size);
-
-        while ((in) && (out) && (remaining > 0))
+        v.update(file.address(), remaining);
+        if (!v.finalize())
         {
-            auto const chunk_size = std::min(remaining, buffer_size);
-            in.read(in_buffer.data(), chunk_size);
-            auto const bytes_read = in.gcount();
-
-            if (bytes_read > 0)
-            {
-                dec.update(in_buffer.data(), out_buffer.data(), bytes_read);
-                out.write(out_buffer.data(), bytes_read);
-                remaining -= bytes_read;
-            }
+            std::cerr << "error: failed to verify file (file data corrupted)" << std::endl;
+            return EXIT_FAILURE;
         }
 
-        if (in.bad())
+        std::ofstream out(output_filename, std::ios::binary);
+
+        constexpr size_t const buffer_size = 100 * 1024;
+        char const * in_buffer = file.address();
+        std::vector<char> out_buffer(buffer_size);
+
+        while ((out) && (remaining > 0))
         {
-            throw std::runtime_error("failed to read from file");        
+            auto const chunk_size = std::min(remaining, buffer_size);
+
+            if (chunk_size > 0)
+            {
+                dec.update(in_buffer, out_buffer.data(), chunk_size);
+                out.write(out_buffer.data(), chunk_size);
+                remaining -= chunk_size;
+                in_buffer += chunk_size;
+            }
         }
 
         if (out.bad())

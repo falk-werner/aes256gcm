@@ -3,6 +3,7 @@
 #include "aes256gcm/proprietary/memmapped_file.hpp"
 
 #include "aes256gcm/decrypter.hpp"
+#include "aes256gcm/verifier.hpp"
 #include "aes256gcm/pbkdf2.hpp"
 
 #include <iostream>
@@ -23,23 +24,31 @@ int decrypt_file_inplace(
     }
 
     auto const key = pbkdf2(password, info.kdf.salt, info.kdf.digest, info.kdf.iterations);
-    decrypter dec(key, info.nonce, info.tag, info.additional_data);
 
-    auto const file_size = std::filesystem::file_size(filename);
-    auto const data_size = file_size - info.size;
-    std::filesystem::resize_file(filename, data_size);
-
+    size_t data_size;
     {
+        verifier v(key, info.nonce, info.tag, info.additional_data);
         memmapped_file file(filename);
-        dec.update_inplace(file.address(), file.size());
+        data_size = file.size() - info.size;
+
+        v.update(file.address(), data_size);
+        if (!v.finalize())
+        {
+            std::cerr << "error: failed to verify file (file data corrupted)" << std::endl;
+            return EXIT_FAILURE;
+        }
+
+        decrypter dec(key, info.nonce, info.tag, info.additional_data);
+        dec.update_inplace(file.address(), data_size);
+
+        if (!dec.finalize())
+        {
+            std::cerr << "error: failed to decrypt file (file data corrupted)" << std::endl;
+            return EXIT_FAILURE;
+        }
     }
 
-    if (!dec.finalize())
-    {
-        std::cerr << "error: failed to decrypt file (file data corrupted)" << std::endl;
-        return EXIT_FAILURE;
-    }
-
+    std::filesystem::resize_file(filename, data_size);
     return EXIT_SUCCESS;
 }
     
