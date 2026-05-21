@@ -27,8 +27,8 @@ void encrypt_file(
 
         encrypter enc(key, additional_data);
 
-        std::ifstream in(input_filename);    
-        std::ofstream out(output_filename);
+        std::ifstream in(input_filename, std::ios::binary);    
+        std::ofstream out(output_filename, std::ios::binary);
 
         std::vector<char> in_buffer;
         std::vector<char> out_buffer;

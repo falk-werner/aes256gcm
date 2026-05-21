@@ -22,7 +22,7 @@ bool get_encryption_info(
     }
 
     auto const end_of_info_pos = file_size - end_of_info_size;
-    std::ifstream file(filename);
+    std::ifstream file(filename, std::ios::binary);
     file.seekg(end_of_info_pos);
 
     char end_of_info[end_of_info_size];
