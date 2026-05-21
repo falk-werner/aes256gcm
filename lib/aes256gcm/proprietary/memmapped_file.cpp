@@ -26,7 +26,7 @@ memmapped_file::memmapped_file(std::string const & filename)
     }
 
     m_address = reinterpret_cast<char*>(mmap(nullptr, m_size, PROT_READ | PROT_WRITE, MAP_SHARED, m_fd, 0));
-    if (nullptr == m_address)
+    if (MAP_FAILED == m_address)
     {
         close(m_fd);
         throw std::runtime_error("failed to memmap file");
