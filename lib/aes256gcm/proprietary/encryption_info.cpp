@@ -73,9 +73,19 @@ void add_end_of_info(std::vector<char> & data)
 
 char parse_next(std::vector<char> const & data, size_t &pos, std::string & value)
 {
+    if (data.size() <= pos)
+    {
+        throw std::runtime_error("parse error: id expected");
+    }
+
     auto const id = data.at(pos++);
     if (id != end_of_info_id)
     {
+        if (data.size() <= pos + 3)
+        {
+            throw std::runtime_error("parse error: failed to read field size");
+        }
+
         size_t size = (((size_t) (data.at(pos++)) & 0xff) << 16) |
                (((size_t) (data.at(pos++)) & 0xff) <<  8) |
                 ((size_t) (data.at(pos++)) & 0xff);
@@ -84,6 +94,10 @@ char parse_next(std::vector<char> const & data, size_t &pos, std::string & value
             return 0xff;
         }
 
+        if (data.size() <= pos + size)
+        {
+            throw std::runtime_error("parse error: failed to read field");
+        }
         value = std::string(&data.data()[pos], size);
         pos += size;
     }
@@ -93,6 +107,11 @@ char parse_next(std::vector<char> const & data, size_t &pos, std::string & value
 
 unsigned int parse_uint(std::string const & value)
 {
+    if (value.size() != 4)
+    {
+        throw std::runtime_error("parse error: uint should be 4 bytes in size");
+    }
+
     unsigned int result = 0;
     for (size_t i = 0; i < 4; i++)
     {
