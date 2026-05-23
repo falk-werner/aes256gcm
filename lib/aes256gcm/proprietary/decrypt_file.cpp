@@ -32,7 +32,7 @@ int decrypt_file(
 
     {
         verifier v(std::move(verification_key), info.nonce, info.tag, info.additional_data);
-        memmapped_file file(input_filename);
+        memmapped_file file(input_filename, true);
         auto remaining = file.size() - info.size;
 
         v.update(file.address(), remaining);

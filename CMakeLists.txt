@@ -39,6 +39,7 @@ include(GoogleTest)
 add_executable(alltests
     test-src/test_pbkdf2.cpp
     test-src/test_xcrypt.cpp
+    test-src/test_xcrypt_file.cpp
     test-src/test_secure_string.cpp
 )
 target_link_libraries(alltests PRIVATE aes256gcm GTest::gtest GTest::gtest_main)
