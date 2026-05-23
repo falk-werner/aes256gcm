@@ -27,8 +27,15 @@ void encrypt_file(
 
         encrypter enc(std::move(key), additional_data);
 
-        std::ifstream in(input_filename, std::ios::binary);    
+        std::ifstream in(input_filename, std::ios::binary);
+        if (!in.is_open()) {
+            throw std::runtime_error("failed to open input file");
+        }
+
         std::ofstream out(output_filename, std::ios::binary);
+        if (!out.is_open()) {
+            throw std::runtime_error("failed to open output file");
+        }
 
         std::vector<char> in_buffer;
         std::vector<char> out_buffer;
