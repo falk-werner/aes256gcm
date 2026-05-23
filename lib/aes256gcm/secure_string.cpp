@@ -1,5 +1,6 @@
 #include "aes256gcm/secure_string.hpp"
 #include <openssl/crypto.h>
+#include <fstream>
 #include <cstring>
 
 namespace aes256gcm
@@ -43,6 +44,28 @@ secure_string::secure_string(char * value, size_t size)
     }
 
 }
+
+secure_string secure_string::from_file(std::string const & filename)
+{
+    std::ifstream file(filename, std::ios::binary);
+    if (!file.is_open())
+    {
+        throw std::runtime_error("failed to open file");
+    }
+
+    file.seekg(0, file.end);
+    size_t const size = file.tellg();
+    file.seekg(0, file.beg);
+    char * value = new char[size + 1];
+    file.read(value, size);
+    value[size] = '0';
+
+    secure_string result;
+    result.size_ = size;
+    result.value_ = value;
+    return std::move(result);
+}
+
 
 secure_string::~secure_string()
 {

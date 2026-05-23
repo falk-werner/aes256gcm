@@ -2,6 +2,7 @@
 #define AES256GCM_SECURE_STRING_HPP
 
 #include <cstddef>
+#include <string>
 
 namespace aes256gcm
 {
@@ -32,6 +33,11 @@ public:
     /// @param value Buffer used to initialize the secure string.
     /// @param size Size of the buffer.
     secure_string(char * value, size_t size);
+
+    /// @brief Creates an instance of secure string from file contents.
+    /// @param filename Name of the file.
+    /// @return Newly created secure string.
+    static secure_string from_file(std::string const & filename);
 
     /// @brief Destructs the secure string.
     ///
