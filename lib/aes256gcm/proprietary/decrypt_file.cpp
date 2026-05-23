@@ -38,7 +38,7 @@ int decrypt_file(
         v.update(file.address(), remaining);
         if (!v.finalize())
         {
-            std::cerr << "error: failed to verify file (file data corrupted)" << std::endl;
+            std::cerr << "error: failed to verify file" << std::endl;
             return EXIT_FAILURE;
         }
 

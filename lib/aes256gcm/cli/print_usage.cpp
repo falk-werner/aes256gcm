@@ -15,6 +15,7 @@ Usage:
 Commands:
     -e, --encrypt encrypt file
     -d, --decrypt decrypt file
+    -t, --verify  verify file
     -p, --print   print info of encrypted file
     -v, --version print version
 

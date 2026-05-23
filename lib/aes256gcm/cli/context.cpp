@@ -10,6 +10,7 @@ context::context(int argc, char* argv[], std::ostream & err)
     static option const long_opts[] = {
         {"encrypt", no_argument, nullptr, 'e'},
         {"decrypt", no_argument, nullptr, 'd'},
+        {"verify" , no_argument, nullptr, 't'},
         {"print"  , no_argument, nullptr, 'p'},
         {"version", no_argument, nullptr, 'v'},
         {"infile" , required_argument, nullptr, 'i'},
@@ -31,7 +32,7 @@ context::context(int argc, char* argv[], std::ostream & err)
     while (!done)
     {
         int idx = 0;
-        int const c = getopt_long(argc, argv, "edpvi:o:k:K:E:h", long_opts, &idx);
+        int const c = getopt_long(argc, argv, "edtpvi:o:k:K:E:h", long_opts, &idx);
         switch (c)
         {
             case -1:
@@ -48,6 +49,9 @@ context::context(int argc, char* argv[], std::ostream & err)
                 break;
             case 'v':
                 cmd = command::print_version;
+                break;
+            case 't':
+                cmd = command::verify;
                 break;
             case 'i':
                 infile = optarg;

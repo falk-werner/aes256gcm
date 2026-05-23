@@ -116,7 +116,7 @@ int decrypt_file_inplace(
     secure_string && password);    
 
 /// @brief Decrypts a file and print the results to a stream.
-/// @param filename path of the file to decrypt
+/// @param input_filename path of the file to decrypt
 /// @param out stream to print the decrypted data to
 /// @param password password to decrypt file
 /// @return 0 on success, otherwise failure.
@@ -124,6 +124,14 @@ int decrypt_file_tostream(
     std::string const & input_filename,
     std::ostream & out,
     secure_string && password);
+
+/// @brief Verifies a file.
+/// @param input_filename path of the file to verify
+/// @param password password to decrypt file
+void verify_file(
+    std::string const & input_filename,
+    secure_string && password);
+
 
 }
 

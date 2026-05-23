@@ -22,6 +22,7 @@ add_library(aes256gcm STATIC
     lib/aes256gcm/proprietary/encryption_info.cpp
     lib/aes256gcm/proprietary/encrypt_file.cpp
     lib/aes256gcm/proprietary/decrypt_file.cpp
+    lib/aes256gcm/proprietary/verify_file.cpp
     lib/aes256gcm/proprietary/get_encryption_info.cpp
     lib/aes256gcm/proprietary/encrypt_file_inplace.cpp
     lib/aes256gcm/proprietary/decrypt_file_inplace.cpp
@@ -35,6 +36,7 @@ add_library(aes256gcm STATIC
     lib/aes256gcm/cli/print_info.cpp
     lib/aes256gcm/cli/encrypt.cpp
     lib/aes256gcm/cli/decrypt.cpp
+    lib/aes256gcm/cli/verify.cpp
 )
 target_link_libraries(aes256gcm PUBLIC OpenSSL::Crypto)
 target_include_directories(aes256gcm PUBLIC inc)
