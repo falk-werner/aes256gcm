@@ -18,7 +18,7 @@ struct encryption_info
         unsigned int iterations;    ///< iterations used for key derivation    
     } kdf;
     std::string encryption_method;  ///< encryption method, always "AES256-GCM"
-    std::string nonce;              ///< none / initialization vector for encryption
+    std::string nonce;              ///< nonce / initialization vector for encryption
     std::string tag;                ///< tag to check authenticity
     std::string additional_data;    ///< additional authenticated but unencrypted data
 };
@@ -30,7 +30,7 @@ struct encryption_info
 ///
 /// @param filename Path of the encrypted file.
 /// @param info Result where to store the encryption info.
-/// @return true, if encryption info is read successfulle, false otherwiese
+/// @return true, if encryption info is read successfully, false otherwise
 bool get_encryption_info(
     std::string const & filename,
     encryption_info & info);
