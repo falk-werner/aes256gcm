@@ -38,8 +38,7 @@ int decrypt_file(
         v.update(file.address(), remaining);
         if (!v.finalize())
         {
-            std::cerr << "error: failed to verify file" << std::endl;
-            return EXIT_FAILURE;
+            throw std::runtime_error("failed to verify file");
         }
 
         std::ofstream out(output_filename, std::ios::binary);
@@ -70,8 +69,7 @@ int decrypt_file(
     if (!dec.finalize())
     {
         std::filesystem::remove(output_filename);
-        std::cerr << "error: failed to decrypt file" << std::endl;
-        return EXIT_FAILURE;
+        throw std::runtime_error("failed to decrypt file");
     }
 
     return EXIT_SUCCESS;

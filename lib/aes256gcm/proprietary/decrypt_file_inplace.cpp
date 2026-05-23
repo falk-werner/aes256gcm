@@ -35,8 +35,7 @@ int decrypt_file_inplace(
         v.update(file.address(), data_size);
         if (!v.finalize())
         {
-            std::cerr << "error: failed to verify file (file data corrupted)" << std::endl;
-            return EXIT_FAILURE;
+            throw std::runtime_error("failed to verify file");
         }
 
         decrypter dec(std::move(key), info.nonce, info.tag, info.additional_data);
@@ -44,8 +43,7 @@ int decrypt_file_inplace(
 
         if (!dec.finalize())
         {
-            std::cerr << "error: failed to decrypt file (file data corrupted)" << std::endl;
-            return EXIT_FAILURE;
+            throw std::runtime_error("failed to decrypt file");
         }
     }
 

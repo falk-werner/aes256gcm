@@ -17,8 +17,7 @@ bool get_encryption_info(
     auto const file_size = std::filesystem::file_size(filename);
     if (file_size < end_of_info_size)
     {
-        std::cerr << "error: file too small" << std::endl;
-        return false;
+        throw std::runtime_error("file too small");
     }
 
     auto const end_of_info_pos = file_size - end_of_info_size;
@@ -30,14 +29,12 @@ bool get_encryption_info(
 
     if (end_of_info_size != file.gcount())
     {
-        std::cerr << "error: failed to read encryption info" << std::endl;
-        return false;
+        throw std::runtime_error("failed to read encryption info");
     }
 
     if (0 != strncmp(&end_of_info[4], signature, sizeof(signature)))
     {
-        std::cerr << "error: invalid signature " << std::endl;
-        return false;
+        throw std::runtime_error("invalid signature");
     }
 
     uint32_t info_size = 0;
@@ -49,8 +46,7 @@ bool get_encryption_info(
 
     if ((info_size > file_size) || (info_size > max_info_size))
     {
-        std::cerr << "error: invalid info size" << info_size << std::endl;
-        return false;
+        throw std::runtime_error("invalid info size");
     }
 
     auto const info_pos = file_size - info_size;
@@ -60,8 +56,7 @@ bool get_encryption_info(
 
     if (file.gcount() != info_size)
     {
-        std::cerr << "error: failed to read encryption info" << std::endl;
-        return false;
+        throw std::runtime_error("failed to read encryption info");
     }
 
     return parse_encryption_info(raw_info, info);
