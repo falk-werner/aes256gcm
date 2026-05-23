@@ -26,6 +26,13 @@ add_library(aes256gcm STATIC
     lib/aes256gcm/proprietary/encrypt_file_inplace.cpp
     lib/aes256gcm/proprietary/decrypt_file_inplace.cpp
     lib/aes256gcm/proprietary/memmapped_file.cpp
+
+    lib/aes256gcm/cli/run.cpp
+    lib/aes256gcm/cli/context.cpp
+    lib/aes256gcm/cli/print_usage.cpp
+    lib/aes256gcm/cli/print_info.cpp
+    lib/aes256gcm/cli/encrypt.cpp
+    lib/aes256gcm/cli/decrypt.cpp
 )
 target_link_libraries(aes256gcm PUBLIC OpenSSL::Crypto)
 target_include_directories(aes256gcm PUBLIC inc)
@@ -51,6 +58,7 @@ add_executable(alltests
     test-src/test_xcrypt.cpp
     test-src/test_xcrypt_file.cpp
     test-src/test_secure_string.cpp
+    test-src/test_cli.cpp
 )
 target_link_libraries(alltests PRIVATE aes256gcm GTest::gtest GTest::gtest_main)
 target_include_directories(alltests PRIVATE lib)
