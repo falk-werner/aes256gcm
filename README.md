@@ -26,7 +26,7 @@ aes256gcm --decrypt -i some.file -k secret
 | -d, --decrypt | - | Decrypt the file. |
 | -p, --print | - | Print information about an encrypted file. |
 | -i, --infile | PATH | Path of the input file. |
-| -o, --outfile | PATH | Optional. Path of the output file. If not specified, file is encrypted / decrypted inplace. |
+| -o, --outfile | PATH | Optional. Path of the output file. If not specified, file is encrypted / decrypted inplace. Use `-` to output to stdout. |
 | -k, --key | STRING | Password used for encryption / descryption. |
 | -K, --keyfile | PATH | Specify a file to read the password from. |
 | -E, --keyfile | STRING | Specify an enviroment variable to read password from. | 

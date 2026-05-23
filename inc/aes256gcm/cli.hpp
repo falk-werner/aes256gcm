@@ -40,12 +40,14 @@ int print_info(std::string const & filename, std::ostream & out, std::ostream & 
 void encrypt(
     std::string const & input_file,
     std::string const & output_file,
-    secure_string && key);
+    secure_string && key,
+    std::ostream & out);
 
 int decrypt(
     std::string const & input_file,
     std::string const & output_file,
-    secure_string && key);
+    secure_string && key,
+    std::ostream & out);
 
 
 

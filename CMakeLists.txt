@@ -25,6 +25,8 @@ add_library(aes256gcm STATIC
     lib/aes256gcm/proprietary/get_encryption_info.cpp
     lib/aes256gcm/proprietary/encrypt_file_inplace.cpp
     lib/aes256gcm/proprietary/decrypt_file_inplace.cpp
+    lib/aes256gcm/proprietary/encrypt_file_tostream.cpp
+    lib/aes256gcm/proprietary/decrypt_file_tostream.cpp
     lib/aes256gcm/proprietary/memmapped_file.cpp
 
     lib/aes256gcm/cli/run.cpp
