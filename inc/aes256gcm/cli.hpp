@@ -13,6 +13,7 @@ enum class command
 {
     encrypt,
     decrypt,
+    verify,
     print_info,
     print_version,
     print_help
@@ -49,7 +50,11 @@ int decrypt(
     secure_string && key,
     std::ostream & out);
 
-
+int verify(
+    std::string const & input_file,
+    secure_string && key,
+    std::ostream & out,
+    std::ostream & err);
 
 }
 
