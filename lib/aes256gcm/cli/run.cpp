@@ -12,10 +12,10 @@ int run(int argc, char* argv[], std::istream & in, std::ostream & out, std::ostr
         switch (ctx.cmd)
         {
             case command::encrypt:
-                encrypt(ctx.infile, ctx.outfile, std::move(ctx.key));
+                encrypt(ctx.infile, ctx.outfile, std::move(ctx.key), out);
                 break;
             case command::decrypt:
-                ctx.exit_code = decrypt(ctx.infile, ctx.outfile, std::move(ctx.key));
+                ctx.exit_code = decrypt(ctx.infile, ctx.outfile, std::move(ctx.key), out);
                 break;
             case command::print_info:
                 ctx.exit_code = print_info(ctx.infile, out, err);

@@ -2,7 +2,9 @@
 #define AES256GCM_PROPRIETARY_HPP
 
 #include <aes256gcm/secure_string.hpp>
+
 #include <string>
+#include <ostream>
 
 namespace aes256gcm::proprietary
 {
@@ -69,6 +71,17 @@ void encrypt_file_inplace(
     secure_string && password,
     std::string const & additional_data = "");
 
+/// @brief Encrypts a file and output result to a stream.
+/// @param input_filename path of the unencrypted file
+/// @param out stream to print encrypted data to
+/// @param password password to encrypt the file
+/// @param additional_data additional data that is stored unencrypted but
+///                        authenticated in the encrypted file
+void encrypt_file_tostream(
+    std::string const & input_filename,
+    std::ostream & out,
+    secure_string && password,
+    std::string const & additional_data = "");
 
 /// @brief Decrypts a given file.
 ///
@@ -87,7 +100,6 @@ int decrypt_file(
     std::string const & output_filename,
     secure_string && password);
 
-
 /// @brief Decrypt a given file inplace.
 ///
 /// @note The input file uses the proprietary file format
@@ -102,6 +114,16 @@ int decrypt_file(
 int decrypt_file_inplace(
     std::string const & filename,
     secure_string && password);    
+
+/// @brief Decrypts a file and print the results to a stream.
+/// @param filename path of the file to decrypt
+/// @param out stream to print the decrypted data to
+/// @param password password to decrypt file
+/// @return 0 on success, otherwise failure.
+int decrypt_file_tostream(
+    std::string const & input_filename,
+    std::ostream & out,
+    secure_string && password);
 
 }
 
