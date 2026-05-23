@@ -85,7 +85,7 @@ context::context(int argc, char* argv[], std::ostream & err)
                 {
                     char * value = secure_getenv(optarg);
                     if (value != nullptr) {
-                        key = optarg;
+                        key = value;
                     }
                     else {
                         err << "error: environment variable not set" << std::endl;
