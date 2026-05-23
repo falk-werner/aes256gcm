@@ -70,7 +70,7 @@ void verifier::update(char const * in, size_t size)
     auto const * const in_buffer = reinterpret_cast<unsigned char const*>(in);    
 
     constexpr size_t const capacity = 64 * 1024;
-    std::vector<unsigned char> chunk(capacity);
+    unsigned char chunk[capacity];
 
     int offset = 0;
     int remaining = static_cast<int>(size);
@@ -80,7 +80,7 @@ void verifier::update(char const * in, size_t size)
         int out_size = chunk_size;
 
         int const rc = EVP_DecryptUpdate(m_ctx.get(), 
-            chunk.data(), &out_size, 
+            chunk, &out_size, 
             &in_buffer[offset], chunk_size);
         if (rc != 1)
         {
