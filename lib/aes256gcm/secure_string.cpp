@@ -134,7 +134,7 @@ secure_string& secure_string::operator=(char * value)
     auto const size = strlen(value);
     char* v = nullptr;
     if (size > 0) {
-        v= new char[size_ + 1];
+        v= new char[size + 1];
         memcpy(v, value, size);
         v[size] = '\0';
 
