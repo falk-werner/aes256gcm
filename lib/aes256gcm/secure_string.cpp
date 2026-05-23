@@ -8,61 +8,82 @@ namespace aes256gcm
 secure_string::secure_string()
 {
     size_ = 0;
-    value_ = new char[1];
-    value_[0] = '\0';
+    value_ = nullptr;
 }
 
 secure_string::secure_string(char * value)
 {   
     size_ = strlen(value);
-    value_ = new char[size_ + 1];
-    memcpy(value_, value, size_);
-    value_[size_] = '\0';
+    if (size_ > 0)
+    {
+        value_ = new char[size_ + 1];
+        memcpy(value_, value, size_);
+        value_[size_] = '\0';
 
-    OPENSSL_cleanse(value, size_ + 1);
-    value[0] = '\0';
+        OPENSSL_cleanse(value, size_ + 1);
+        value[0] = '\0';
+    }
+    else {
+        value_ = nullptr;
+    }
 }
 
 secure_string::secure_string(char * value, size_t size)
 {
     size_ = size;
-    value_ = new char[size + 1];
-
-    if (size > 0)
-    {
+    if (size > 0) {
+        value_ = new char[size + 1];
         memcpy(value_, value, size_);
+        value_[size_] = '\0';
+
         OPENSSL_cleanse(value, size);        
     }
+    else {
+        value_ = nullptr;
+    }
 
-    value_[size_] = '\0';
 }
-
 
 secure_string::~secure_string()
 {
-    OPENSSL_cleanse(value_, size_ + 1);
-    delete[] value_;
+    if (value_ != nullptr)
+    {
+        OPENSSL_cleanse(value_, size_ + 1);
+        delete[] value_;
+    }
 }
 
 secure_string::secure_string(secure_string const & other)
 {
     size_ = other.size_;
-    value_ = new char[other.size_ + 1];
-    memcpy(value_, other.value_, size_);
-    value_[size_] = '\0';
+    if (size_ > 0) {
+        value_ = new char[other.size_ + 1];
+        memcpy(value_, other.value_, size_);
+        value_[size_] = '\0';
+    }
+    else {
+        value_ = nullptr;
+    }
 }
 
 secure_string& secure_string::operator=(secure_string const & other)
 {
-    if (this != &other)
-    {
-        OPENSSL_cleanse(value_, size_ + 1);
-        delete[] value_;
+    if (this != &other) {
 
-        size_ = other.size_;
-        value_ = new char[other.size_ + 1];
-        memcpy(value_, other.value_, size_);
-        value_[size_] = '\0';
+        auto const size = other.size_;
+        char * value = nullptr;
+        if (size > 0) {
+            value = new char[size + 1];
+            memcpy(value, other.value_, size);
+            value[size] = '\0';
+        }
+
+        if (value_ != nullptr) {
+            OPENSSL_cleanse(value_, size_ + 1);
+            delete[] value_;
+        }
+        value_ = value;
+        size_ = size;
     }
 
     return *this;
@@ -74,23 +95,24 @@ secure_string::secure_string(secure_string && other)
     value_ = other.value_;
 
     other.size_ = 0;
-    other.value_ = new char[1];
-    other.value_[0] = '\0';
+    other.value_ = nullptr;
 }
 
 secure_string& secure_string::operator=(secure_string && other)
 {
     if (this != &other)
     {
-        OPENSSL_cleanse(value_, size_ + 1);
-        delete[] value_;
+        if (value_ != nullptr)
+        {
+            OPENSSL_cleanse(value_, size_ + 1);
+            delete[] value_;
+        }
 
         size_ = other.size_;
         value_ = other.value_;
 
         other.size_ = 0;
-        other.value_ = new char[1];
-        other.value_[0] = '\0';
+        other.value_ = nullptr;
     }
 
     return *this;
@@ -109,16 +131,23 @@ bool secure_string::operator!=(secure_string const & other) const
 
 secure_string& secure_string::operator=(char * value)
 {
-    OPENSSL_cleanse(value_, size_ + 1);
-    delete[] value_;
+    auto const size = strlen(value);
+    char* v = nullptr;
+    if (size > 0) {
+        v= new char[size_ + 1];
+        memcpy(v, value, size);
+        v[size] = '\0';
 
-    size_ = strlen(value);
-    value_ = new char[size_ + 1];
-    memcpy(value_, value, size_);
-    value_[size_] = '\0';
+        OPENSSL_cleanse(value, size);
+        value[0] = '\0';
+    }
 
-    OPENSSL_cleanse(value, size_);
-    value[0] = '\0';
+    if (value_ != nullptr) {
+        OPENSSL_cleanse(value_, size_ + 1);
+        delete[] value_;
+    }
+    size_ = size;
+    value_ = v;
 
     return *this;
 }
@@ -126,7 +155,7 @@ secure_string& secure_string::operator=(char * value)
 
 char const * secure_string::c_str() const
 {
-    return value_;
+    return (value_ != nullptr) ? value_ : "";
 }
 
 size_t secure_string::size() const
@@ -136,8 +165,11 @@ size_t secure_string::size() const
 
 void secure_string::clear()
 {
-    OPENSSL_cleanse(value_, size_ + 1);
-    value_[0] = '\0';
+    if (value_ != nullptr) {
+        OPENSSL_cleanse(value_, size_ + 1);
+        delete[] value_;
+    }
+    value_ = nullptr;
     size_ = 0;
 }
 
