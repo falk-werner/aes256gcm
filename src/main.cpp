@@ -2,6 +2,8 @@
 
 #include <getopt.h>
 
+#include <cstdlib>
+
 #include <iostream>
 #include <fstream>
 #include <iomanip>
@@ -40,6 +42,7 @@ Options:
     -k, --key     KEY  specify encryption key
                        if not specified, empty key is used
     -K, --keyfile FILE specify the file to read the key from
+    -E, --keyenv  NAME specify environment variable to read key from
 )";
 }
 
@@ -65,6 +68,7 @@ struct context
             {"outfile", required_argument, nullptr, 'o'},
             {"key"    , required_argument, nullptr, 'k'},
             {"keyfile", required_argument, nullptr, 'K'},
+            {"keyenv" , required_argument, nullptr, 'E'},
             {"help"   , no_argument, nullptr, 'h'},
             {nullptr  , 0, nullptr, 0}
         };
@@ -79,7 +83,7 @@ struct context
         while (!done)
         {
             int idx = 0;
-            int const c = getopt_long(argc, argv, "edpvi:o:k:K:h", long_opts, &idx);
+            int const c = getopt_long(argc, argv, "edpvi:o:k:K:E:h", long_opts, &idx);
             switch (c)
             {
                 case -1:
@@ -118,7 +122,21 @@ struct context
                             done = true;
                         }
                         catch (...) {
-                           std::cerr << "error: failed to read key file" << std::endl;
+                            std::cerr << "error: failed to read key file" << std::endl;
+                            exit_code = EXIT_FAILURE;
+                            cmd = command::print_help;
+                            done = true;
+                        }
+                    }
+                    break;
+                case 'E':
+                    {
+                        char * value = secure_getenv(optarg);
+                        if (value != nullptr) {
+                            key = optarg;
+                        }
+                        else {
+                            std::cerr << "error: environment variable not set" << std::endl;
                             exit_code = EXIT_FAILURE;
                             cmd = command::print_help;
                             done = true;
