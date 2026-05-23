@@ -29,6 +29,7 @@ aes256gcm --decrypt -i some.file -k secret
 | -o, --outfile | PATH | Optional. Path of the output file. If not specified, file is encrypted / decrypted inplace. |
 | -k, --key | STRING | Password used for encryption / descryption. |
 | -K, --keyfile | PATH | Specify a file to read the password from. |
+| -E, --keyfile | STRING | Specify an enviroment variable to read password from. | 
 
 ## Build
 
