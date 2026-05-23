@@ -12,6 +12,7 @@ using aes256gcm::proprietary::decrypt_file;
 using aes256gcm::proprietary::decrypt_file_inplace;
 using aes256gcm::proprietary::get_encryption_info;
 using aes256gcm::proprietary::encryption_info;
+using aes256gcm::secure_string;
 
 namespace
 {
@@ -118,35 +119,35 @@ struct context
     int exit_code;
     std::string infile;
     std::string outfile;
-    std::string key;
+    secure_string key;
 };
 
 void encrypt(
     std::string const & input_file,
     std::string const & output_file,
-    std::string & key)
+    secure_string && key)
 {
     if (output_file.empty())
     {
-        encrypt_file_inplace(input_file, key);
+        encrypt_file_inplace(input_file, std::move(key));
     }
     else
     {
-        encrypt_file(input_file, output_file, key);
+        encrypt_file(input_file, output_file, std::move(key));
     }
 }
 
 int decrypt(
     std::string const & input_file,
     std::string const & output_file,
-    std::string & key)
+    secure_string && key)
 {
     if (output_file.empty())
     {
-        return decrypt_file_inplace(input_file, key);
+        return decrypt_file_inplace(input_file, std::move(key));
     }
 
-    return decrypt_file(input_file, output_file, key);
+    return decrypt_file(input_file, output_file, std::move(key));
 }
 
 void print_hex(std::string const & caption, std::string const & value)
@@ -194,10 +195,10 @@ int main(int argc, char* argv[])
         switch (ctx.cmd)
         {
             case command::encrypt:
-                encrypt(ctx.infile, ctx.outfile, ctx.key);
+                encrypt(ctx.infile, ctx.outfile, std::move(ctx.key));
                 break;
             case command::decrypt:
-                ctx.exit_code = decrypt(ctx.infile, ctx.outfile, ctx.key);
+                ctx.exit_code = decrypt(ctx.infile, ctx.outfile, std::move(ctx.key));
                 break;
             case command::print_info:
                 ctx.exit_code = print_info(ctx.infile);

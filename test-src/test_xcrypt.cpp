@@ -1,29 +1,32 @@
 #include "aes256gcm/aes256gcm.hpp"
 #include <gtest/gtest.h>
 
+using aes256gcm::secure_string;
+
 namespace
 {
 
-std::string generate_key(
-    std::string & password,
+secure_string generate_key(
+    char * password,
     std::string & salt)
 {
     std::string digest;
     unsigned int iterations;
     aes256gcm::pbkdf2_generate_params(salt, digest, iterations);
 
-    return aes256gcm::pbkdf2(password, salt, digest, iterations);
+    return aes256gcm::pbkdf2(std::move(secure_string(password)), salt, digest, iterations);
 }
 
 }
 
 TEST(aes256gcm, encrypt_and_decrypt)
 {
-    std::string password = "secret";
+    char password[] = "secret";
     std::string salt;
-    auto const key = generate_key(password, salt);
+    auto enc_key = generate_key(password, salt);
+    auto dec_key = enc_key;
 
-    aes256gcm::encrypter encrypter(key);
+    aes256gcm::encrypter encrypter(std::move(enc_key));
     std::vector<char> const plaintext = {1, 2, 3, 4};
     std::vector<char> encrypted(plaintext.size());
 
@@ -31,7 +34,7 @@ TEST(aes256gcm, encrypt_and_decrypt)
     auto tag = encrypter.finalize();
     auto const & nonce = encrypter.nonce();
 
-    aes256gcm::decrypter decrypter(key, nonce, tag);
+    aes256gcm::decrypter decrypter(std::move(dec_key), nonce, tag);
     std::vector<char> decrypted(plaintext.size());
     
     decrypter.update(encrypted.data(), decrypted.data(), decrypted.size());
@@ -47,11 +50,12 @@ TEST(aes256gcm, encrypt_and_decrypt)
 
 TEST(aes256gcm, encrypt_and_decrypt_inplace)
 {
-    std::string password = "secret";
+    char password[] = "secret";
     std::string salt;
-    auto const key = generate_key(password, salt);
+    auto enc_key = generate_key(password, salt);
+    auto dec_key = enc_key;
 
-    aes256gcm::encrypter encrypter(key);
+    aes256gcm::encrypter encrypter(std::move(enc_key));
     char buffer[] = {1, 2, 3, 4};
 
     encrypter.update_inplace(buffer, 4);
@@ -63,7 +67,7 @@ TEST(aes256gcm, encrypt_and_decrypt_inplace)
     ASSERT_NE(3, buffer[2]);
     ASSERT_NE(4, buffer[3]);
 
-    aes256gcm::decrypter decrypter(key, nonce, tag);
+    aes256gcm::decrypter decrypter(std::move(dec_key), nonce, tag);
     std::vector<char> decrypted;
     
     decrypter.update_inplace(buffer, 4);
@@ -77,11 +81,12 @@ TEST(aes256gcm, encrypt_and_decrypt_inplace)
 
 TEST(aes256gcm, decrypt_fails_with_invalid_tag)
 {
-    std::string password = "secret";
+    char password[] = "secret";
     std::string salt;
-    auto const key = generate_key(password, salt);
+    auto enc_key = generate_key(password, salt);
+    auto dec_key = enc_key;
 
-    aes256gcm::encrypter encrypter(key);
+    aes256gcm::encrypter encrypter(std::move(enc_key));
     std::vector<char> const plaintext = {1, 2, 3, 4};
     std::vector<char> encrypted(plaintext.size());
 
@@ -92,7 +97,7 @@ TEST(aes256gcm, decrypt_fails_with_invalid_tag)
     // corrupt tag
     tag[0]++;
 
-    aes256gcm::decrypter decrypter(key, nonce, tag);
+    aes256gcm::decrypter decrypter(std::move(dec_key), nonce, tag);
     std::vector<char> decrypted(plaintext.size());
     
     decrypter.update(encrypted.data(), decrypted.data(), encrypted.size());
@@ -111,11 +116,11 @@ TEST(aes256gcm, decrypt_fails_with_invalid_tag)
 
 TEST(aes256gcm, decrypt_fails_with_invalid_key)
 {
-    std::string password = "secret";
+    char password[] = "secret";
     std::string salt;
     auto key = generate_key(password, salt);
 
-    aes256gcm::encrypter encrypter(key);
+    aes256gcm::encrypter encrypter(std::move(key));
     std::vector<char> const plaintext = {1, 2, 3, 4};
     std::vector<char> encrypted(plaintext.size());
 
@@ -123,10 +128,10 @@ TEST(aes256gcm, decrypt_fails_with_invalid_key)
     auto tag = encrypter.finalize();
     auto const & nonce = encrypter.nonce();
 
-    // corrupt nonce
-    key[0]++;
+    char invalid_password[] = "invalid";
+    auto invalid_key = generate_key(invalid_password, salt);
 
-    aes256gcm::decrypter decrypter(key, nonce, tag);
+    aes256gcm::decrypter decrypter(std::move(invalid_key), nonce, tag);
     std::vector<char> decrypted(plaintext.size());
     
     decrypter.update(encrypted.data(), decrypted.data(), encrypted.size());
@@ -137,11 +142,12 @@ TEST(aes256gcm, decrypt_fails_with_invalid_key)
 
 TEST(aes256gcm, decrypt_fails_with_invalid_nonce)
 {
-    std::string password = "secret";
+    char password[] = "secret";
     std::string salt;
-    auto const key = generate_key(password, salt);
+    auto enc_key = generate_key(password, salt);
+    auto dec_key = enc_key;
 
-    aes256gcm::encrypter encrypter(key);
+    aes256gcm::encrypter encrypter(std::move(enc_key));
     std::vector<char> const plaintext = {1, 2, 3, 4};
     std::vector<char> encrypted(plaintext.size());
 
@@ -152,7 +158,7 @@ TEST(aes256gcm, decrypt_fails_with_invalid_nonce)
     // corrupt nonce
     nonce[0]++;
 
-    aes256gcm::decrypter decrypter(key, nonce, tag);
+    aes256gcm::decrypter decrypter(std::move(dec_key), nonce, tag);
     std::vector<char> decrypted(plaintext.size());
     
     decrypter.update(encrypted.data(), decrypted.data(), encrypted.size());

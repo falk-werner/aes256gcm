@@ -1,6 +1,7 @@
 #ifndef AES256GCM_PROPRIETARY_HPP
 #define AES256GCM_PROPRIETARY_HPP
 
+#include <aes256gcm/secure_string.hpp>
 #include <string>
 
 namespace aes256gcm::proprietary
@@ -49,7 +50,7 @@ bool get_encryption_info(
 void encrypt_file(
     std::string const & input_filename,
     std::string const & output_filename,
-    std::string & password,
+    secure_string && password,
     std::string const & additional_data = "");
 
 
@@ -65,7 +66,7 @@ void encrypt_file(
 ///                        authenticated in the encrypted file
 void encrypt_file_inplace(
     std::string const & filename,
-    std::string & password,
+    secure_string && password,
     std::string const & additional_data = "");
 
 
@@ -84,7 +85,7 @@ void encrypt_file_inplace(
 int decrypt_file(
     std::string const & input_filename,
     std::string const & output_filename,
-    std::string & password);
+    secure_string && password);
 
 
 /// @brief Decrypt a given file inplace.
@@ -100,7 +101,7 @@ int decrypt_file(
 /// @return 0 on success, otherwise failure.
 int decrypt_file_inplace(
     std::string const & filename,
-    std::string & password);    
+    secure_string && password);    
 
 }
 

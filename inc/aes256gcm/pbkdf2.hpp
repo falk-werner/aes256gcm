@@ -1,6 +1,7 @@
 #ifndef AES256GCM_PBKDF2_HPP
 #define AES256GCM_PBKDF2_HPP
 
+#include <aes256gcm/secure_string.hpp>
 #include <string>
 
 namespace aes256gcm
@@ -18,8 +19,8 @@ namespace aes256gcm
 /// @param iterations number of iterations to derive key
 /// @return derived key
 /// @throws An openssl_error is thrown on error of underlying OpenSSL function calls.
-std::string pbkdf2(
-    std::string & password,
+secure_string pbkdf2(
+    secure_string && password,
     std::string const & salt,
     std::string const & digest,
     unsigned int iterations);

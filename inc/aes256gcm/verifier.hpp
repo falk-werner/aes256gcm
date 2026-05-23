@@ -1,6 +1,8 @@
 #ifndef AES256GCM_VERIFIER_HPP
 #define AES256GCM_VERIFIER_HPP
 
+#include <aes256gcm/secure_string.hpp>
+
 #include <openssl/evp.h>
 
 #include <string>
@@ -21,7 +23,7 @@ public:
     /// @throws A logic error is thrown on invalid key size.
     ///         An openssl_error is thrown on error of underlying OpenSSL function calls.
     verifier(
-        std::string const & key,
+        secure_string && key,
         std::string const & nonce,
         std::string const & tag,
         std::string const & additional_data = {});

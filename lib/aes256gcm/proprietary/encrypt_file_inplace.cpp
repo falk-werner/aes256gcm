@@ -13,16 +13,16 @@ namespace aes256gcm::proprietary
 
 void encrypt_file_inplace(
     std::string const & filename,
-    std::string & password,
+    secure_string && password,
     std::string const & additional_data)
 {
     std::string salt;
     std::string digest;
     unsigned int iterations;
     pbkdf2_generate_params(salt, digest, iterations);
-    auto const key = pbkdf2(password, salt, digest, iterations);
+    auto key = pbkdf2(std::move(password), salt, digest, iterations);
 
-    encrypter enc(key, additional_data);
+    encrypter enc(std::move(key), additional_data);
 
     {
         memmapped_file file(filename);

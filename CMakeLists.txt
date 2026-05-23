@@ -12,6 +12,7 @@ add_library(aes256gcm STATIC
     lib/aes256gcm/encrypter.cpp
     lib/aes256gcm/decrypter.cpp
     lib/aes256gcm/verifier.cpp
+    lib/aes256gcm/secure_string.cpp
     
     lib/aes256gcm/proprietary/encryption_info.cpp
     lib/aes256gcm/proprietary/encrypt_file.cpp
@@ -35,9 +36,10 @@ include(CTest)
 find_package(GTest REQUIRED)
 include(GoogleTest)
 
-add_executable(alltests 
+add_executable(alltests
     test-src/test_pbkdf2.cpp
     test-src/test_xcrypt.cpp
+    test-src/test_secure_string.cpp
 )
 target_link_libraries(alltests PRIVATE aes256gcm GTest::gtest GTest::gtest_main)
 target_include_directories(alltests PRIVATE lib)
