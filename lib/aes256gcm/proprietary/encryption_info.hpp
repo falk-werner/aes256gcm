@@ -21,7 +21,7 @@ void create_encryption_info(
     std::string const & additional_data);
 
 
-bool parse_encryption_info(
+void parse_encryption_info(
     std::vector<char> const & data,
     encryption_info & info);
 

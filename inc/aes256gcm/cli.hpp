@@ -34,9 +34,9 @@ int run(int argc, char* argv[], std::istream & in, std::ostream & out, std::ostr
 
 void print_usage(std::ostream & out);
 
-int print_version(std::ostream & out);
+void print_version(std::ostream & out);
 
-int print_info(std::string const & filename, std::ostream & out, std::ostream & err);
+void print_info(std::string const & filename, std::ostream & out, std::ostream & err);
 
 void encrypt(
     std::string const & input_file,
@@ -44,7 +44,7 @@ void encrypt(
     secure_string && key,
     std::ostream & out);
 
-int decrypt(
+void decrypt(
     std::string const & input_file,
     std::string const & output_file,
     secure_string && key,

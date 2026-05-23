@@ -145,7 +145,7 @@ void create_encryption_info(
 
 
 
-bool parse_encryption_info(
+void parse_encryption_info(
     std::vector<char> const & data,
     encryption_info & info)
 {
@@ -192,8 +192,6 @@ bool parse_encryption_info(
                 throw std::runtime_error("invalid id");
         }
     }
-
-    return true;
 }
     
 

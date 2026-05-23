@@ -10,7 +10,7 @@
 namespace aes256gcm::proprietary
 {
 
-bool get_encryption_info(
+void get_encryption_info(
     std::string const & filename,
     encryption_info & info)
 {
@@ -59,7 +59,7 @@ bool get_encryption_info(
         throw std::runtime_error("failed to read encryption info");
     }
 
-    return parse_encryption_info(raw_info, info);
+    parse_encryption_info(raw_info, info);
 }
     
 

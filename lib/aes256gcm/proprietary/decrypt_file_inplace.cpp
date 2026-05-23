@@ -13,15 +13,12 @@
 namespace aes256gcm::proprietary
 {
 
-int decrypt_file_inplace(
+void decrypt_file_inplace(
     std::string const & filename,
     secure_string && password)
 {
     encryption_info info;
-    if (!get_encryption_info(filename, info))
-    {
-        return EXIT_FAILURE;
-    }
+    get_encryption_info(filename, info);
 
     auto key = pbkdf2(std::move(password), info.kdf.salt, info.kdf.digest, info.kdf.iterations);
 
@@ -48,7 +45,6 @@ int decrypt_file_inplace(
     }
 
     std::filesystem::resize_file(filename, data_size);
-    return EXIT_SUCCESS;
 }
     
 }

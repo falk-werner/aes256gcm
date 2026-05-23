@@ -24,14 +24,10 @@ namespace
 namespace aes256gcm::cli
 {
 
-int print_info(std::string const & filename, std::ostream & out, std::ostream & err)
+void print_info(std::string const & filename, std::ostream & out, std::ostream & err)
 {
     encryption_info info;
-    if (!get_encryption_info(filename, info))
-    {
-        err << "error: missing encryption info" << std::endl;
-        return EXIT_FAILURE;
-    }
+    get_encryption_info(filename, info);
 
     out <<    "Encryption Info Size: " << std::dec << info.size << std::endl;
     out <<    "Key Derivation Function:" << std::endl;
@@ -44,8 +40,6 @@ int print_info(std::string const & filename, std::ostream & out, std::ostream & 
     print_hex("    Nonce: ", info.nonce, out);
     print_hex("    Tag: ", info.tag, out);
     print_hex("    Additional Data: ", info.additional_data, out);
-
-    return EXIT_SUCCESS;
 }
 
 }
