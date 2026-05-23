@@ -31,16 +31,42 @@ aes256gcm --decrypt -i some.file -k secret
 
 ## Build
 
+### Build and Install (Release)
+
 ```bash
-cmake -B build
+cmake -B build -D CMAKE_BUILD_TYPE=MinSizeRel -D WITHOUT_TESTS=ON
+cmake --build build
+sudo cmake --install build
+```
+
+### Development Build and Workflow
+
+```bash
+cmake -B build -D CMAKE_BUILD_TYPE=Debug -D WITH_COVERAGE=ON
 cmake --build build
 
 # Run Unit Tests
 cmake --build build --target test
 
-# Install
-sudo cmake --install build
+# Run Unit Tests with memcheck
+ctest -T memcheck --test-dir build
+
+# Show Coverage at command line
+ctest -T coverage --test-dir build
+
+# Generate Coverage report (build/coverage/index.html)
+cmake --build build --target coverage
 ```
+
+## Dependencies
+
+- OpenSSL
+
+### Development Dependencies
+
+- Google Test
+- valgrind
+- gcovr
 
 ## References
 
