@@ -14,7 +14,7 @@ secure_string generate_key(
     unsigned int iterations;
     aes256gcm::pbkdf2_generate_params(salt, digest, iterations);
 
-    return aes256gcm::pbkdf2(std::move(secure_string(password)), salt, digest, iterations);
+    return aes256gcm::pbkdf2(std::move(secure_string(password)), salt, digest, 2048);
 }
 
 }

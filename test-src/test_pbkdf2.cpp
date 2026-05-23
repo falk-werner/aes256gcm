@@ -3,7 +3,7 @@
 
 using aes256gcm::secure_string;
 
-constexpr int const iterations = 600 * 1000;
+constexpr int const iterations = 2048;
 
 TEST(pbkdf2, derive_key)
 {

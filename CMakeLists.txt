@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 3.20)
 project(aes256gcm)
 
+option(WITHOUT_TESTS "Disable build of Unit Tests." OFF)
+option(WITH_COVERAGE "Enable code coverage." OFF)
+
 set(CMAKE_CXX_STANDARD 17)
 
 find_package(OpenSSL REQUIRED)
@@ -29,6 +32,9 @@ target_include_directories(aes256gcm PRIVATE lib)
 add_executable(aes256gcm_app src/main.cpp)
 target_link_libraries(aes256gcm_app PRIVATE aes256gcm)
 set_target_properties(aes256gcm_app PROPERTIES OUTPUT_NAME aes256gcm)
+install(TARGETS aes256gcm_app)
+
+if(NOT(WITHOUT_TESTS))
 
 enable_testing()
 include(CTest)
@@ -46,3 +52,19 @@ target_link_libraries(alltests PRIVATE aes256gcm GTest::gtest GTest::gtest_main)
 target_include_directories(alltests PRIVATE lib)
 
 gtest_discover_tests(alltests)
+
+if(WITH_COVERAGE)
+target_compile_options(aes256gcm PUBLIC -coverage)
+target_link_options(aes256gcm PUBLIC -coverage)
+
+add_custom_target(coverage
+    mkdir -p coverage
+	COMMAND ./alltests
+	COMMAND gcovr --html-details coverage/index.html -r .. -e ../test -e ../src 
+)
+add_dependencies(coverage alltests)
+
+endif()
+
+
+endif()
