@@ -8,7 +8,7 @@ namespace aes256gcm
 {
 
 decrypter::decrypter(
-    std::string const & key,
+    secure_string && key,
     std::string const & nonce,
     std::string const & tag,
     std::string const & additional_data)
@@ -37,7 +37,7 @@ decrypter::decrypter(
     m_ctx.reset(raw_ctx);
 
     int rc = EVP_DecryptInit_ex(m_ctx.get(), EVP_aes_256_gcm(), nullptr, 
-        reinterpret_cast<unsigned char const*>(key.data()), 
+        reinterpret_cast<unsigned char const*>(key.c_str()), 
         reinterpret_cast<unsigned char const *>(nonce.data()));
     if (rc != 1)
     {

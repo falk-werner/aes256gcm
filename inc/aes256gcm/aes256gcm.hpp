@@ -5,6 +5,7 @@
 #include <aes256gcm/decrypter.hpp>
 #include <aes256gcm/verifier.hpp>
 #include <aes256gcm/pbkdf2.hpp>
+#include <aes256gcm/secure_string.hpp>
 
 #include <aes256gcm/proprietary.hpp>
 

@@ -7,7 +7,7 @@ namespace aes256gcm
 {
 
 encrypter::encrypter(
-    std::string const & key,
+    secure_string && key,
     std::string const & additional_data)
 : m_ctx(nullptr, EVP_CIPHER_CTX_free)
 , m_nonce(rand(nonce_size))
@@ -25,7 +25,7 @@ encrypter::encrypter(
     m_ctx.reset(raw_ctx);
 
     int rc = EVP_EncryptInit_ex(m_ctx.get(), EVP_aes_256_gcm(), nullptr, 
-        reinterpret_cast<unsigned char const*>(key.data()), 
+        reinterpret_cast<unsigned char const*>(key.c_str()), 
         reinterpret_cast<unsigned char const *>(m_nonce.data()));
     if (rc != 1)
     {

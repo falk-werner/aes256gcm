@@ -13,7 +13,7 @@ namespace aes256gcm::proprietary
 void encrypt_file(
     std::string const & input_filename,
     std::string const & output_filename,
-    std::string & password,
+    secure_string && password,
     std::string const & additional_data)
 {
     try
@@ -23,9 +23,9 @@ void encrypt_file(
         unsigned int iterations;
         pbkdf2_generate_params(salt, digest, iterations);
 
-        auto const key = pbkdf2(password, salt, digest, iterations);
+        auto key = pbkdf2(std::move(password), salt, digest, iterations);
 
-        encrypter enc(key, additional_data);
+        encrypter enc(std::move(key), additional_data);
 
         std::ifstream in(input_filename, std::ios::binary);    
         std::ofstream out(output_filename, std::ios::binary);

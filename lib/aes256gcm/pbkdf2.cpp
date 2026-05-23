@@ -12,8 +12,8 @@
 namespace aes256gcm
 {
 
-std::string pbkdf2(
-    std::string & password,
+secure_string pbkdf2(
+    secure_string && password,
     std::string const & salt,
     std::string const & digest,
     unsigned int iterations)
@@ -34,7 +34,7 @@ std::string pbkdf2(
 
     OSSL_PARAM const params[] =
     {
-        OSSL_PARAM_construct_octet_string(OSSL_KDF_PARAM_PASSWORD, const_cast<char*>(password.data()), password.size()),
+        OSSL_PARAM_construct_octet_string(OSSL_KDF_PARAM_PASSWORD, const_cast<char*>(password.c_str()), password.size()),
         OSSL_PARAM_construct_octet_string(OSSL_KDF_PARAM_SALT, const_cast<char*>(salt.data()), salt.size()),
         OSSL_PARAM_construct_utf8_string(OSSL_KDF_PARAM_DIGEST, const_cast<char*>(digest.data()), digest.size()),
         OSSL_PARAM_construct_uint(OSSL_KDF_PARAM_ITER, &iterations),
@@ -48,8 +48,7 @@ std::string pbkdf2(
         throw openssl_error();
     }
 
-    for(char & c: password) { c = '\0'; }
-    return std::string(key, key_size);
+    return secure_string(key, key_size);
 }
 
 void pbkdf2_generate_params(

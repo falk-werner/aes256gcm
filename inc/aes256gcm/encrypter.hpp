@@ -1,6 +1,8 @@
 #ifndef AES256GCM_ENCRYPTER_HPP
 #define AES256GCM_ENCRYPTER_HPP
 
+#include <aes256gcm/secure_string.hpp>
+
 #include <openssl/evp.h>
 
 #include <string>
@@ -20,7 +22,7 @@ public:
     /// @throws A logic error is thrown on invalid key size.
     ///         An openssl_error is thrown on error of underlying OpenSSL function calls.
     encrypter(
-        std::string const & key,
+        secure_string && key,
         std::string const & additional_data = "");
     
     /// @brief Cleans up the encryption context.

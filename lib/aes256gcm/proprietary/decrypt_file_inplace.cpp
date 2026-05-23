@@ -15,7 +15,7 @@ namespace aes256gcm::proprietary
 
 int decrypt_file_inplace(
     std::string const & filename,
-    std::string & password)
+    secure_string && password)
 {
     encryption_info info;
     if (!get_encryption_info(filename, info))
@@ -23,11 +23,12 @@ int decrypt_file_inplace(
         return EXIT_FAILURE;
     }
 
-    auto const key = pbkdf2(password, info.kdf.salt, info.kdf.digest, info.kdf.iterations);
+    auto key = pbkdf2(std::move(password), info.kdf.salt, info.kdf.digest, info.kdf.iterations);
 
     size_t data_size;
     {
-        verifier v(key, info.nonce, info.tag, info.additional_data);
+        auto verification_key = key;
+        verifier v(std::move(verification_key), info.nonce, info.tag, info.additional_data);
         memmapped_file file(filename);
         data_size = file.size() - info.size;
 
@@ -38,7 +39,7 @@ int decrypt_file_inplace(
             return EXIT_FAILURE;
         }
 
-        decrypter dec(key, info.nonce, info.tag, info.additional_data);
+        decrypter dec(std::move(key), info.nonce, info.tag, info.additional_data);
         dec.update_inplace(file.address(), data_size);
 
         if (!dec.finalize())
