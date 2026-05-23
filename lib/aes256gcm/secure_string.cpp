@@ -98,7 +98,7 @@ secure_string& secure_string::operator=(secure_string && other)
 
 bool secure_string::operator==(secure_string const & other) const
 {
-    return (size_ == other.size_) && (0 == memcmp(value_, other.value_, size_));
+    return (size_ == other.size_) && (0 == CRYPTO_memcmp(value_, other.value_, size_));
 }
 
 bool secure_string::operator!=(secure_string const & other) const
