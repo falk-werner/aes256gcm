@@ -30,10 +30,9 @@ Options:
 )";
 }
 
-int print_version(std::ostream & out)
+void print_version(std::ostream & out)
 {
     out << aes256gcm::version() << std::endl;
-    return EXIT_SUCCESS;
 }
 
 }

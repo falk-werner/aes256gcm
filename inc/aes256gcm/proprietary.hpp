@@ -32,8 +32,7 @@ struct encryption_info
 ///
 /// @param filename Path of the encrypted file.
 /// @param info Result where to store the encryption info.
-/// @return true, if encryption info is read successfully, false otherwise
-bool get_encryption_info(
+void get_encryption_info(
     std::string const & filename,
     encryption_info & info);
 
@@ -94,8 +93,7 @@ void encrypt_file_tostream(
 /// @param input_filename path of encrypted file
 /// @param output_filename path where the decrypted file is stored to
 /// @param password password to decrypt file
-/// @return 0 on success, otherwise failure.
-int decrypt_file(
+void decrypt_file(
     std::string const & input_filename,
     std::string const & output_filename,
     secure_string && password);
@@ -110,8 +108,7 @@ int decrypt_file(
 ///
 /// @param filename path of the file to decrypt
 /// @param password password to decrypt file
-/// @return 0 on success, otherwise failure.
-int decrypt_file_inplace(
+void decrypt_file_inplace(
     std::string const & filename,
     secure_string && password);    
 
@@ -119,8 +116,7 @@ int decrypt_file_inplace(
 /// @param input_filename path of the file to decrypt
 /// @param out stream to print the decrypted data to
 /// @param password password to decrypt file
-/// @return 0 on success, otherwise failure.
-int decrypt_file_tostream(
+void decrypt_file_tostream(
     std::string const & input_filename,
     std::ostream & out,
     secure_string && password);

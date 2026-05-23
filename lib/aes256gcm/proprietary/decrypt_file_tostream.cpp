@@ -13,16 +13,13 @@
 namespace aes256gcm::proprietary
 {
 
-int decrypt_file_tostream(
+void decrypt_file_tostream(
     std::string const & input_filename,
     std::ostream & out,
     secure_string && password)
 {
     encryption_info info;
-    if (!get_encryption_info(input_filename, info))
-    {
-        return EXIT_FAILURE;
-    }
+    get_encryption_info(input_filename, info);
 
     auto key = pbkdf2(std::move(password), info.kdf.salt, info.kdf.digest, info.kdf.iterations);
     auto verification_key = key;
@@ -66,8 +63,6 @@ int decrypt_file_tostream(
     {
         throw std::runtime_error("error: failed to decrypt file");
     }
-
-    return EXIT_SUCCESS;
 }
 
 }

@@ -19,10 +19,7 @@ void verify_file(
     secure_string && password)
 {
     encryption_info info;
-    if (!get_encryption_info(input_filename, info))
-    {
-        throw std::runtime_error("verifcation failed: invalid file format");
-    }
+    get_encryption_info(input_filename, info);
 
     auto key = pbkdf2(std::move(password), info.kdf.salt, info.kdf.digest, info.kdf.iterations);
     verifier v(std::move(key), info.nonce, info.tag, info.additional_data);
