@@ -45,6 +45,7 @@ secure_string pbkdf2(
     int const rc = EVP_KDF_derive(ctx.get(), reinterpret_cast<unsigned char*>(key), key_size, params);
     if (rc != 1)
     {
+        OPENSSL_cleanse(key, key_size);
         throw openssl_error();
     }
 
