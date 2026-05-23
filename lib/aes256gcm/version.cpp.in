@@ -1,0 +1,11 @@
+#include "aes256gcm/version.hpp"
+
+namespace aes256gcm
+{
+
+char const * version()
+{
+    return "@CMAKE_PROJECT_VERSION@";
+}
+
+};

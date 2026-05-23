@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.20)
-project(aes256gcm)
+project(aes256gcm VERSION 1.0.0)
 
 option(WITHOUT_TESTS "Disable build of Unit Tests." OFF)
 option(WITH_COVERAGE "Enable code coverage." OFF)
@@ -9,6 +9,8 @@ set(CMAKE_CXX_STANDARD 17)
 find_package(OpenSSL REQUIRED)
 
 add_library(aes256gcm STATIC
+    ${CMAKE_CURRENT_BINARY_DIR}/aes256gcm_version.cpp
+
     lib/aes256gcm/rand.cpp
     lib/aes256gcm/pbkdf2.cpp
     lib/aes256gcm/openssl_error.cpp
@@ -28,6 +30,8 @@ add_library(aes256gcm STATIC
 target_link_libraries(aes256gcm PUBLIC OpenSSL::Crypto)
 target_include_directories(aes256gcm PUBLIC inc)
 target_include_directories(aes256gcm PRIVATE lib)
+
+configure_file(${CMAKE_CURRENT_LIST_DIR}/lib/aes256gcm/version.cpp.in ${CMAKE_CURRENT_BINARY_DIR}/aes256gcm_version.cpp @ONLY)
 
 add_executable(aes256gcm_app src/main.cpp)
 target_link_libraries(aes256gcm_app PRIVATE aes256gcm)
