@@ -10,7 +10,7 @@
 namespace aes256gcm::proprietary
 {
 
-memmapped_file::memmapped_file(std::string const & filename)
+memmapped_file::memmapped_file(std::string const & filename, bool readonly)
 {
     auto const file_size = std::filesystem::file_size(filename);
     if (file_size == 0)
@@ -23,13 +23,14 @@ memmapped_file::memmapped_file(std::string const & filename)
     }
     m_size = static_cast<size_t>(file_size);
 
-    m_fd = open(filename.c_str(), O_RDWR);
+    m_fd = open(filename.c_str(), readonly ? O_RDONLY : O_RDWR);
     if (m_fd < 0)
     {
         throw std::runtime_error("failed to open file");
     }
 
-    m_address = reinterpret_cast<char*>(mmap(nullptr, m_size, PROT_READ | PROT_WRITE, MAP_SHARED, m_fd, 0));
+    int const prot = readonly ? PROT_READ : PROT_READ | PROT_WRITE;
+    m_address = reinterpret_cast<char*>(mmap(nullptr, m_size, prot, MAP_SHARED, m_fd, 0));
     if (MAP_FAILED == m_address)
     {
         close(m_fd);

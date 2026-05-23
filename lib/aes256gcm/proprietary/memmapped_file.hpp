@@ -13,7 +13,7 @@ class memmapped_file
     memmapped_file(memmapped_file &&) = delete;
     memmapped_file& operator=(memmapped_file &&) = delete;
 public:
-    explicit memmapped_file(std::string const & filename);
+    explicit memmapped_file(std::string const & filename, bool readonly = false);
     ~memmapped_file();
     char * address() const noexcept;
     size_t size() const noexcept;
