@@ -19,7 +19,8 @@ namespace
 
 void print_usage()
 {
-    std::cout << R"(aes256gcm
+    std::cout << "aes256gcm, V" << aes256gcm::version() << ", (C) 2026 Falk Werner <github.com/falk-werner>" << std::endl;
+    std::cout << R"(Encrypt and decrypt files using AES-256 GCM
 
 usage:
     encrypt <command> -i INFILE [-o OUTFILE] [-k KEY]
@@ -28,6 +29,7 @@ commands:
     -e, --encrypt encrypt file
     -d, --decrypt decrypt file
     -p, --print   print info of encrypted file
+    -v, --version print version
 
 Options:
     -i, --infile  FILE specify input file name
@@ -43,6 +45,7 @@ enum class command
     encrypt,
     decrypt,
     print_info,
+    print_version,
     print_help
 };
 
@@ -54,6 +57,7 @@ struct context
             {"encrypt", no_argument, nullptr, 'e'},
             {"decrypt", no_argument, nullptr, 'd'},
             {"print"  , no_argument, nullptr, 'p'},
+            {"version", no_argument, nullptr, 'v'},
             {"infile" , required_argument, nullptr, 'i'},
             {"outfile", required_argument, nullptr, 'o'},
             {"key"    , required_argument, nullptr, 'k'},
@@ -71,7 +75,7 @@ struct context
         while (!done)
         {
             int idx = 0;
-            int const c = getopt_long(argc, argv, "edpi:o:k:h", long_opts, &idx);
+            int const c = getopt_long(argc, argv, "edpvi:o:k:h", long_opts, &idx);
             switch (c)
             {
                 case -1:
@@ -85,6 +89,9 @@ struct context
                     break;
                 case 'p':
                     cmd = command::print_info;
+                    break;
+                case 'v':
+                    cmd = command::print_version;
                     break;
                 case 'i':
                     infile = optarg;
@@ -108,7 +115,7 @@ struct context
             }
         }
 
-        if ((cmd != command::print_help) && (infile.empty())) {
+        if ((cmd != command::print_help) && (cmd != command::print_version) && (infile.empty())) {
             std::cerr << "error: missing required option -i" << std::endl;
             exit_code = EXIT_FAILURE;
             cmd = command::print_help;
@@ -184,6 +191,12 @@ int print_info(std::string const & filename)
     return EXIT_SUCCESS;
 }
 
+int print_version()
+{
+    std::cout << aes256gcm::version() << std::endl;
+    return EXIT_SUCCESS;
+}
+
 }
 
 int main(int argc, char* argv[])
@@ -202,6 +215,9 @@ int main(int argc, char* argv[])
                 break;
             case command::print_info:
                 ctx.exit_code = print_info(ctx.infile);
+                break;
+            case command::print_version:
+                ctx.exit_code = print_version();
                 break;
             case command::print_help:
                 // fall-through
