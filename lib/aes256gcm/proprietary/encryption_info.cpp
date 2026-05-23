@@ -189,8 +189,7 @@ bool parse_encryption_info(
             case invalid_id:
                 // fall-through
             default:
-                std::cerr << "error: invalid id" << std::endl;
-                return false;                    
+                throw std::runtime_error("invalid id");
         }
     }
 
