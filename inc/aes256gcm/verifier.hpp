@@ -17,8 +17,8 @@ public:
     /// @brief Creates a new AES256-GCM verification context.
     ///
     /// @param key Key used for decryption.
-    /// @param nonce None used for encryption.
-    /// @param tag Tag used to verify that decrytion was successful.
+    /// @param nonce Nonce used for encryption.
+    /// @param tag Tag used to verify that decryption was successful.
     /// @param additional_data Additional authenticated data.
     /// @throws A logic error is thrown on invalid key size.
     ///         An openssl_error is thrown on error of underlying OpenSSL function calls.
@@ -39,7 +39,7 @@ public:
     ///         A runtime_error is thrown on mismatch of output buffer size.
     void update(char const * in, size_t size);
 
-    /// @brief Finalized the encrytion and checks if decryption was successful.
+    /// @brief Finalized the encryption and checks if decryption was successful.
     ///
     /// @note All decrypted data is invalid, if the check was not successful.
     ///       The decrypted data should not be used in this case.

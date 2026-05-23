@@ -18,7 +18,7 @@ public:
     /// @brief Creates an empty instance intended for later assignment.
     secure_string();
 
-    /// @brief Create an instace of secure string from a C string.
+    /// @brief Create an instance of secure string from a C string.
     ///
     /// @note The contents of the C string are securely erased.
     ///
@@ -43,7 +43,7 @@ public:
     /// @param other Reference of prototype used to initialize the secure string.
     secure_string(secure_string const & other);
 
-    /// @brief Assging the value of an existing secure string.
+    /// @brief Assigns the value of an existing secure string.
     /// @param other Reference to the secure string used for assignment.
     /// @return Self-Reference.
     secure_string& operator=(secure_string const & other);
@@ -75,7 +75,7 @@ public:
     /// @return True if either the sizes or the contents of this and the other secure string do not match.
     bool operator!=(secure_string const & other) const;
 
-    /// @brief Assigns the value of from an exitsing C string.
+    /// @brief Assigns the value of from an existing C string.
     ///
     /// The former contents of this secure string are securely erased.
     /// The contents of the C string are securely erased.

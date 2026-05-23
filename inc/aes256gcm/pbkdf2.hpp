@@ -14,8 +14,8 @@ namespace aes256gcm
 ///       algorithms.
 ///
 /// @param password   password to derive key from
-/// @param salt       salt of password; should be at least 8 bytes
-/// @param digest     name of the alorith used to hash the password
+/// @param salt       salt of password; should be at least 16 bytes
+/// @param digest     name of the algorithm used to hash the password
 /// @param iterations number of iterations to derive key
 /// @return derived key
 /// @throws An openssl_error is thrown on error of underlying OpenSSL function calls.
