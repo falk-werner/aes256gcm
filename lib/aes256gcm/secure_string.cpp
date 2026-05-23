@@ -58,7 +58,7 @@ secure_string secure_string::from_file(std::string const & filename)
     file.seekg(0, file.beg);
     char * value = new char[size + 1];
     file.read(value, size);
-    value[size] = '0';
+    value[size] = '\0';
 
     secure_string result;
     result.size_ = size;
