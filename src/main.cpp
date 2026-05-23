@@ -3,8 +3,10 @@
 #include <getopt.h>
 
 #include <iostream>
+#include <fstream>
 #include <iomanip>
 #include <string>
+#include <sstream>
 
 using aes256gcm::proprietary::encrypt_file;
 using aes256gcm::proprietary::encrypt_file_inplace;
@@ -37,6 +39,7 @@ Options:
                        if not specified, file is encrypted / descripted inplace
     -k, --key     KEY  specify encryption key
                        if not specified, empty key is used
+    -K, --keyfile FILE specify the file to read the key from
 )";
 }
 
@@ -61,6 +64,7 @@ struct context
             {"infile" , required_argument, nullptr, 'i'},
             {"outfile", required_argument, nullptr, 'o'},
             {"key"    , required_argument, nullptr, 'k'},
+            {"keyfile", required_argument, nullptr, 'K'},
             {"help"   , no_argument, nullptr, 'h'},
             {nullptr  , 0, nullptr, 0}
         };
@@ -75,7 +79,7 @@ struct context
         while (!done)
         {
             int idx = 0;
-            int const c = getopt_long(argc, argv, "edpvi:o:k:h", long_opts, &idx);
+            int const c = getopt_long(argc, argv, "edpvi:o:k:K:h", long_opts, &idx);
             switch (c)
             {
                 case -1:
@@ -101,6 +105,25 @@ struct context
                     break;
                 case 'k':
                     key = optarg;
+                    break;
+                case 'K':
+                    {
+                        try {
+                            key = secure_string::from_file(optarg);
+                        }
+                        catch (std::exception const &ex) {
+                            std::cerr << "error: failed to read key file: " << ex.what() << std::endl;
+                            exit_code = EXIT_FAILURE;
+                            cmd = command::print_help;
+                            done = true;
+                        }
+                        catch (...) {
+                           std::cerr << "error: failed to read key file" << std::endl;
+                            exit_code = EXIT_FAILURE;
+                            cmd = command::print_help;
+                            done = true;
+                        }
+                    }
                     break;
                 case 'h':
                     cmd = command::print_help;
